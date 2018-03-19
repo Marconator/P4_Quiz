@@ -1,0 +1,20 @@
+{
+  "name": "quiz",
+  "version": "1.0.0",
+  "description": "Practica Quiz",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [
+    "CORE"
+  ],
+  "author": "Marco Antonio Martin Herrera",
+  "license": "Unlicense",
+  "dependencies": {
+    "chalk": "^2.3.2",
+    "figlet": "^1.2.0",
+    "sequelize": "^4.36.0",
+    "sqlite3": "^3.1.13"
+  }
+}
