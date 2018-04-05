@@ -54,6 +54,7 @@ makeQuestion(rl, 'Introduzca una pregunta: ')
 const listCmd = (socket,rl) => {
 	models.quiz.findAll()
 	.each(quiz => {
+		socket.write(` [${quiz.id}] ${quiz.question}`);
 		log(socket,` [${colorize(quiz.id, 'magenta')}] ${quiz.question}`);
 	})
 	.catch(error => {
@@ -150,13 +151,16 @@ const testCmd = (socket, rl, id) => {
 	.then(id => models.quiz.findById(id))
 	.then(quiz => {
 		if(!quiz) {
+			socket.write("error");
 			throw new Error (`No existe un quiz asociado al id=${id}.`);
 		}
 		return makeQuestion(rl, `${quiz.question}:`)
 		.then(a => {
 			if(a.trim().toLowerCase()===quiz.answer.trim().toLowerCase()){
+				socket.write("correct");
 				biglog(socket,'CORRECTO', 'green');
 			} else{
+				socket.write("incorrect");
 				biglog(socket,'INCORRECTO', 'red');
 			}
 		})
@@ -187,8 +191,8 @@ const playCmd = (socket,rl) => {
 };
 
 const creditsCmd = (socket,rl) => {
-	log(socket,"Autores de la práctica:");
-    log(socket,"Marco Antonio Martín Herrera", 'green');
+	socket.write("Autores de la práctica:");
+    socket.write("Marco Antonio Martín Herrera", 'green');
     rl.prompt();
 };
 
@@ -208,23 +212,24 @@ validateId(id)
 		return makeQuestion(rl, `${quiz.question}:`)
 		.then(a => {
 			if(a.trim().toLowerCase()===quiz.answer.trim().toLowerCase()){
+				socket.write("correct");
 				biglog(socket,'CORRECTO', 'green');
 				score++;
 				preguntas.splice(id,1);
 				if(preguntas.length===0){
 					biglog(socket,"¡HAS GANADO!", "yellow");
-					console.log(socket,"Puntuación final: ");
+					log(socket,"Puntuación final: ");
 					biglog(score, 'magenta');
 				}else{
-					console.log(socket,"Puntuación actual: ");
+					log(socket,"Puntuación actual: ");
 					biglog(score, 'magenta');
 					juega(rl, score, preguntas);
 				}
 			} else{
 				biglog('INCORRECTO', 'red');
-				console.log(socket,"incorrect");
-				console.log(socket,"Fin");
-				console.log(socket,"Tu puntuación fue: ");
+				socket.write("incorrecto");
+				socket.write("fin");
+				log(socket,"Tu puntuación fue: ");
 				biglog(socket,score, 'magenta');
 			}
 		})
