@@ -75,11 +75,11 @@ rl.on('line', (line) => {
     	break;
 
     case 'edit':
-    	cmds.editCmd(rl, args[1]);
+    	cmds.editCmd(socket, rl, args[1]);
     	break;
 
     case 'credits':
-    	cmds.creditsCmd(rl);
+    	cmds.creditsCmd(socket, rl);
     	break;
 
     default:
